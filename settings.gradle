@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-rootProject.name='fileslauncher'
-include ':automotive'
-include ':common'
-include ':mobile'
+rootProject.name="fileslauncher"
+include ":app"

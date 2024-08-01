@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.muzso.fileslauncher.common;
+package hu.muzso.fileslauncher;
 
 import static com.google.common.truth.Truth.assertThat;
 

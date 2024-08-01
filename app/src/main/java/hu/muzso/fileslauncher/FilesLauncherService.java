@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hu.muzso.fileslauncher.common;
+package hu.muzso.fileslauncher;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;

@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package hu.muzso.fileslauncher.common;
+package hu.muzso.fileslauncher;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import androidx.car.app.model.MessageTemplate;
-import androidx.car.app.model.PaneTemplate;
-import androidx.car.app.model.Row;
 import androidx.car.app.testing.TestCarContext;
 import androidx.test.core.app.ApplicationProvider;
 
@@ -28,8 +26,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.internal.DoNotInstrument;
-
-import java.util.List;
 
 /**
  * A sample test on {@link FilesLauncherScreen}.

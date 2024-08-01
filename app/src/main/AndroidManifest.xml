@@ -15,9 +15,7 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="1"
-    android:versionName="1.0">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Various required feature settings for an automotive app. -->
     <uses-feature
@@ -48,7 +46,7 @@
             tools:ignore="MetadataTagInsideApplicationTag" />
 
         <service
-            android:name="hu.muzso.fileslauncher.common.FilesLauncherService"
+            android:name="hu.muzso.fileslauncher.FilesLauncherService"
             android:exported="true">
           <intent-filter>
             <action android:name="androidx.car.app.CarAppService" />
