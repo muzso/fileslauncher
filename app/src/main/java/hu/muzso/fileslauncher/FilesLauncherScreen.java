@@ -1,21 +1,7 @@
-/*
- * Copyright (C) 2021 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package hu.muzso.fileslauncher;
 
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -35,6 +21,11 @@ import androidx.car.app.model.Template;
  */
 public class FilesLauncherScreen extends Screen {
     private static final String TAG = "FilesLauncherScreen";
+    private static final String[][] PACKAGES = new String[][] {
+            new String[]{ "com.android.documentsui", "com.android.documentsui.LauncherActivity" },
+            new String[]{ "com.google.android.documentsui", "com.android.documentsui.LauncherActivity" }
+    };
+
     private final CarContext mCarContext;
 
     public FilesLauncherScreen(@NonNull CarContext carContext)
@@ -43,56 +34,89 @@ public class FilesLauncherScreen extends Screen {
         mCarContext = carContext;
     }
 
+    private void onClickListener() {
+        Log.i(TAG, "onClickListener is starting");
+        PackageManager pm = mCarContext.getPackageManager();
+        StringBuilder errorMsgBuilder = new StringBuilder(100);
+        if (pm != null) {
+            boolean success = false;
+            for (int i = 0; i < PACKAGES.length; i++) {
+                String packageName = PACKAGES[i][0];
+                String activityClassName = PACKAGES[i][1];
+                Log.i(TAG, "invoking getLaunchIntentForPackage() for \"" + packageName + "\" package");
+                Intent intent = null;
+                try {
+                    intent = pm.getLaunchIntentForPackage(packageName);
+                    if (intent == null) {
+                        Log.i(TAG, "invoking getLaunchIntentForPackage() for \"" + packageName + "\" package returned null");
+                    }
+                } catch (Exception e) {
+                    errorMsgBuilder.append(mCarContext.getString(R.string.error_exception_for_package, i+1, packageName, "PackageManager.getLaunchIntentForPackage()", e.getMessage()));
+                }
+                if (intent != null) {
+                    try {
+                        ComponentName componentName = intent.getComponent();
+                        activityClassName = componentName.getClassName();
+                    } catch (Exception e) {
+                        errorMsgBuilder.append(mCarContext.getString(R.string.error_exception_get_activity_class, i+1, packageName, e.getMessage()));
+                    }
+                } else {
+                    Log.i(TAG, "getLaunchIntentForPackage() did not return intent for \"" + packageName + "\" package, adding \"" + activityClassName + "\" activity");
+                    intent = new Intent();
+                    try {
+                        intent.setClassName(packageName, activityClassName);
+                        try {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        } catch (Exception e) {
+                            errorMsgBuilder.append(mCarContext.getString(R.string.error_exception_for_package_and_activity, i+1, packageName, activityClassName, "Intent.addFlags()", e.getMessage()));
+                        }
+                    } catch (Exception e) {
+                        errorMsgBuilder.append(mCarContext.getString(R.string.error_exception_for_package_and_activity, i+1, packageName, activityClassName, "Intent.setClassName()", e.getMessage()));
+                    }
+                }
+                Log.i(TAG, "before startActivity()");
+                try {
+                    mCarContext.startActivity(intent);
+                    success = true;
+                    Log.i(TAG, "startActivity() was successful");
+                    break;
+                } catch (ActivityNotFoundException e) {
+                    Log.i(TAG, "no activity was found for \"" + packageName + "\" package and \"" + activityClassName + "\" activity");
+                } catch (Exception e) {
+                    errorMsgBuilder.append(mCarContext.getString(R.string.error_exception_for_package_and_activity, i+1, packageName, activityClassName, "CarContext.startActivity()", e.getMessage()));
+                }
+                Log.i(TAG, "after startActivity()");
+            }
+            if (!success) {
+                errorMsgBuilder.append("\n");
+                errorMsgBuilder.append(mCarContext.getString(R.string.error_failure_lead));
+                for (int i = 0; i < PACKAGES.length; i++) {
+                    String[] packageSpec = PACKAGES[i];
+                    errorMsgBuilder.append("\n\n");
+                    errorMsgBuilder.append(mCarContext.getString(R.string.error_failure_package, i+1, packageSpec[0], packageSpec[1]));
+                }
+            }
+        } else {
+            errorMsgBuilder.append("\n");
+            errorMsgBuilder.append(mCarContext.getString(R.string.error_package_manager));
+        }
+        if (errorMsgBuilder.length() > 0) {
+            Log.e(TAG, "Error:" + errorMsgBuilder);
+            getScreenManager().push(new ResultScreen(mCarContext, errorMsgBuilder.toString()));
+        }
+        Log.i(TAG, "onClickListener is finished");
+    }
+
     @NonNull
     @Override
     public Template onGetTemplate() {
-        String message = "This app can launch the \"Files\" builtin application.";
-        String[][] packages = new String[][] {
-                new String[]{ "com.android.documentsui", "com.android.documentsui.LauncherActivity" },
-                new String[]{ "com.google.android.documentsui", "com.android.documentsui.LauncherActivity" }
-        };
-
         Action action = new Action.Builder()
-                .setTitle("Launch")
+                .setTitle(mCarContext.getString(R.string.launcher_button_label))
                 .setBackgroundColor(CarColor.BLUE)
-                .setOnClickListener(() -> {
-                    Log.i(TAG, "onClickListener is starting");
-                    PackageManager pm = mCarContext.getPackageManager();
-                    if (pm != null) {
-                        boolean success = false;
-                        for (int i = 0; i < packages.length; i++) {
-                            String packageName = packages[i][0];
-                            String activityName = packages[i][1];
-                            Log.i(TAG, "invoking getLaunchIntentForPackage() for \"" + packageName + "\" package");
-                            Intent intent = pm.getLaunchIntentForPackage(packageName);
-                            if (intent == null) {
-                                Log.i(TAG, "getLaunchIntentForPackage() did not return intent for \"" + packageName + "\" package, adding \"" + activityName + "\" activity");
-                                intent = new Intent();
-                                intent.setClassName(packageName, activityName);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            }
-                            Log.i(TAG, "before startActivity()");
-                            try {
-                                mCarContext.startActivity(intent);
-                                success = true;
-                                Log.i(TAG, "startActivity() was successful");
-                                break;
-                            } catch (ActivityNotFoundException e) {
-                                Log.i(TAG, "no activity was found for \"" + packageName + "\" package and \"" + activityName + "\" activity");
-                            }
-                            Log.i(TAG, "after startActivity()");
-                        }
-                        if (!success) {
-                            Log.e(TAG, "failed to launch the \"Files\" app");
-                        }
-                    } else {
-                        Log.e(TAG, "failed to get the package manager from the context");
-                    }
-                    Log.i(TAG, "onClickListener is finished");
-                })
+                .setOnClickListener(() -> onClickListener())
                 .build();
 
-        return new MessageTemplate.Builder(message)
+        return new MessageTemplate.Builder(mCarContext.getString(R.string.launcher_message))
                 .addAction(action)
                 .setHeaderAction(Action.APP_ICON)
                 .build();
