@@ -10,4 +10,9 @@
   <string name="error_failure_lead" translatable="false">Failed after trying the following package and activity combinations:</string>
   <string name="error_failure_package" translatable="false">%1$d.) package = %2$s%nactivity = %3$s</string>
   <string name="error_package_manager" translatable="false">Failed to get the package manager from the context.</string>
+  <string name="success_with_error" translatable="false">It seems that the \"Files\" app could be successfully launched, but there were some unexpected errors/exceptions along the way.</string>
+  <string name="failure_with_error" translatable="false">It seems that the \"Files\" app could not be successfully launched as there were some unexpected errors/exceptions along the way.</string>
+  <string name="issue_reporting_notice" translatable="false">Please, check either the GitHub issues at %1$s or the Reddit thread at %2$s and if these issues were not reported yet, do so by including the version of the app, the type of the vehicle/device and the error messages below.</string>
+  <string name="github_url" translatable="false">https://github.com/muzso/fileslauncher/issues</string>
+  <string name="reddit_url" translatable="false">https://www.reddit.com/r/ex30/comments/1ehh5tk/installing_custom_apps_with_sw_v14/</string>
 </resources>

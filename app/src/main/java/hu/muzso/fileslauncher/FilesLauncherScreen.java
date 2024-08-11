@@ -38,8 +38,8 @@ public class FilesLauncherScreen extends Screen {
         Log.i(TAG, "onClickListener is starting");
         PackageManager pm = mCarContext.getPackageManager();
         StringBuilder errorMsgBuilder = new StringBuilder(100);
+        boolean success = false;
         if (pm != null) {
-            boolean success = false;
             for (int i = 0; i < PACKAGES.length; i++) {
                 String packageName = PACKAGES[i][0];
                 String activityClassName = PACKAGES[i][1];
@@ -101,8 +101,19 @@ public class FilesLauncherScreen extends Screen {
             errorMsgBuilder.append(mCarContext.getString(R.string.error_package_manager));
         }
         if (errorMsgBuilder.length() > 0) {
-            Log.e(TAG, "Error:" + errorMsgBuilder);
-            getScreenManager().push(new ResultScreen(mCarContext, errorMsgBuilder.toString()));
+            Log.e(TAG, "Error(s):" + errorMsgBuilder);
+
+            StringBuilder finalMsg = new StringBuilder(errorMsgBuilder.length() + 100);
+            if (success) {
+                finalMsg.append(mCarContext.getString(R.string.success_with_error));
+            } else {
+                finalMsg.append(mCarContext.getString(R.string.failure_with_error));
+            }
+            finalMsg.append("\n");
+            finalMsg.append(mCarContext.getString(R.string.issue_reporting_notice, mCarContext.getString(R.string.github_url), mCarContext.getString(R.string.reddit_url)));
+            finalMsg.append("\n\n");
+            finalMsg.append(errorMsgBuilder);
+            getScreenManager().push(new ResultScreen(mCarContext, finalMsg.toString()));
         }
         Log.i(TAG, "onClickListener is finished");
     }
