@@ -22,6 +22,7 @@ import androidx.car.app.model.Template;
 public class FilesLauncherScreen extends Screen {
     private static final String TAG = "FilesLauncherScreen";
     private static final String[][] PACKAGES = new String[][] {
+            new String[]{ "com.android.documentsui", "com.android.documentsui.files.FilesActivity" },
             new String[]{ "com.android.documentsui", "com.android.documentsui.LauncherActivity" },
             new String[]{ "com.google.android.documentsui", "com.android.documentsui.LauncherActivity" }
     };

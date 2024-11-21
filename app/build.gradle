@@ -7,8 +7,8 @@ android {
         applicationId "hu.muzso.fileslauncher"
         minSdkVersion 29
         targetSdkVersion 34
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
     }
 
     buildTypes {
@@ -26,6 +26,7 @@ android {
             proguardFiles getDefaultProguardFile(
                     "proguard-android-optimize.txt"),
                     "proguard-rules.pro"
+            signingConfig signingConfigs.debug
         }
     }
 
