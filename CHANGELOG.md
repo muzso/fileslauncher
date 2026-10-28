@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - Updated dependencies to latest versions.
+- Added a default app/proguard-rules.pro, because one of the dependency upgrades now requires it (previously I could build release APKs without it).
 - Increased Java source and target compatibility to 17 from 1.8.
 - Dependency version strings are now in gradle/libs.versions.toml.
 - We now only display the collected error messages if no activity start succeeded.

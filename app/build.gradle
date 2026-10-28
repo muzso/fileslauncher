@@ -23,10 +23,7 @@ android {
 
             // Includes the default ProGuard rules files that are packaged with
             // the Android Gradle plugin.
-            proguardFiles getDefaultProguardFile(
-                    "proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
