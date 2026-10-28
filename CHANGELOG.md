@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-10-28
+
+### Added
+
+- Added the "com.android.car.documentsui" package name to be used in the activity launcher too, since in AAOS 15 this is used for the Files app.
+- Added the "com.android.documentsui.files.LauncherActivity" and "com.android.documentsui.ViewDownloadsActivity" activity (class)names to be used in the activity launcher too (seen in AAOS 15).
+
+### Fixed
+
+- The activity launching method that worked in AAOS 12, didn't work in AAOS 15. The latter requires that we specify the display for the new activity, and it must be the default display and not the virtual display of FilesLauncher.
+- There was a bug: if getLaunchIntentForPackage() returned an Intent, we only tried to start its activity and didn't try the one from our PACKAGES array. Now we first try the activity from its return value and if didn't succeed, then we try the other activities in our list.
+- Fixed a deprecation warning about setHeaderAction().
+
+### Changed
+
+- Updated dependencies to latest versions.
+- Increased Java source and target compatibility to 17 from 1.8.
+- Dependency version strings are now in gradle/libs.versions.toml.
+- We now only display the collected error messages if no activity start succeeded.
+
 ## [1.0.3] - 2026-08-25
 
 ### Fixed
@@ -35,6 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Initial release (feature complete and mostly stable)
 
+[1.0.4]: https://github.com/muzso/fileslauncher/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/muzso/fileslauncher/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/muzso/fileslauncher/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/muzso/fileslauncher/compare/1.0.0...1.0.1

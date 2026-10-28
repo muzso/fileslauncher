@@ -1,14 +1,14 @@
 apply plugin: "com.android.application"
 
 android {
-    compileSdk 34
+    compileSdk 37
 
     defaultConfig {
         applicationId "hu.muzso.fileslauncher"
         minSdkVersion 29
-        targetSdkVersion 34
-        versionCode 4
-        versionName "1.0.3"
+        targetSdkVersion 37
+        versionCode 5
+        versionName "1.0.4"
     }
 
     buildTypes {
@@ -31,17 +31,22 @@ android {
     }
 
     compileOptions {
-        targetCompatibility = JavaVersion.VERSION_1_8
-        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
     }
     namespace "hu.muzso.fileslauncher"
+    packaging {
+        jniLibs {
+            useLegacyPackaging false
+        }
+    }
 }
 
 dependencies {
-    implementation "androidx.car.app:app-automotive:1.4.0"
-    implementation "androidx.car.app:app:1.4.0"
-    testImplementation "com.google.truth:truth:1.4.4"
-    testImplementation "androidx.car.app:app-testing:1.4.0"
-    testImplementation "androidx.test:core:1.6.1"
-    testImplementation "org.robolectric:robolectric:4.13"
+    implementation libs.androidx.app.automotive
+    implementation libs.androidx.app
+    testImplementation libs.truth
+    testImplementation libs.androidx.app.testing
+    testImplementation libs.androidx.core
+    testImplementation libs.robolectric
 }
